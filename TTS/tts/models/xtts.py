@@ -75,7 +75,14 @@ def load_audio(audiopath, sampling_rate):
         # 对于 BytesIO 对象，使用 librosa 的 load 函数
         audio_np, lsr = librosa.load(audiopath, sr=sampling_rate, mono=False)
         # 将 NumPy 数组转换为 PyTorch 张量
-        audio = torch.from_numpy(audio_np)
+        audio = torch.FloatTensor(audio_np)
+        # 处理通道数据
+        if len(audio.shape) > 1:
+            if audio.shape[0] < 5:
+                audio = audio[0]
+            else:
+                assert audio.shape[1] < 5
+                audio = audio[:, 0]
     else:    
         # torchaudio should chose proper backend to load audio depending on platform
         audio, lsr = torchaudio.load(audiopath)
