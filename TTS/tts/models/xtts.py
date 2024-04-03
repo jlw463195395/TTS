@@ -83,7 +83,9 @@ def load_audio(audiopath, sampling_rate):
             else:
                 assert audio.shape[1] < 5
                 audio = audio[:, 0]
-    else:    
+        if audio.dim() == 1:
+            audio = audio.unsqueeze(0)
+    else:
         # torchaudio should chose proper backend to load audio depending on platform
         audio, lsr = torchaudio.load(audiopath)
 
