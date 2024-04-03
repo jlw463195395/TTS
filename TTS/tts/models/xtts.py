@@ -73,7 +73,9 @@ def load_audio(audiopath, sampling_rate):
     # 使用 librosa 读取音频流
     if isinstance(audiopath, io.BytesIO):
         # 对于 BytesIO 对象，使用 librosa 的 load 函数
-        audio, lsr = librosa.load(audiopath, sr=sampling_rate, mono=False)
+        audio_np, lsr = librosa.load(audiopath, sr=sampling_rate, mono=False)
+        # 将 NumPy 数组转换为 PyTorch 张量
+        audio = torch.from_numpy(audio_np)
     else:    
         # torchaudio should chose proper backend to load audio depending on platform
         audio, lsr = torchaudio.load(audiopath)
